@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TutoFlex - Plateforme de Tutoriels</title>
+  <style>
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1e1e1e;
+      --bg-tertiary: #252525;
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --accent: #bb86fc;
+      --accent-secondary: #03dac6;
+      --danger: #cf6679;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    
+    header {
+      background-color: var(--bg-secondary);
+      padding: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    
+    .logo i {
+      font-size: 1.8rem;
+    }
+    
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-tertiary);
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      flex: 1;
+      max-width: 500px;
+      margin: 0.5rem 0;
+    }
+    
+    .search-bar input {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      width: 100%;
+      padding: 0.5rem;
+      outline: none;
+    }
+    
+    .search-bar i {
+      color: var(--text-secondary);
+    }
+    
+    nav {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.2s;
+      padding: 0.5rem;
+    }
+    
+    nav a:hover {
+      color: var(--accent);
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    main {
+      margin-top: 5rem;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: minmax(200px, 1fr) 3fr;
+      gap: 1rem;
+    }
+    
+    .sidebar {
+      background-color: var(--bg-secondary);
+      border-radius: 10px;
+      padding: 1.5rem;
+      height: calc(100vh - 7rem);
+      position: sticky;
+      top: 5rem;
+      overflow-y: auto;
+    }
+    
+    .sidebar h3 {
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+    }
+    
+    .sidebar ul {
+      list-style: none;
+    }
+    
+    .sidebar li {
+      margin-bottom: 1rem;
+    }
+    
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem;
+      border-radius: 5px;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    
+    .sidebar a:hover {
+      background-color: rgba(187, 134, 252, 0.1);
+      color: var(--accent);
+    }
+    
+    .sidebar a.active {
+      background-color: rgba(187, 134, 252, 0.2);
+      color: var(--accent);
+    }
+    
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .section-header h2 {
+      font-size: 1.5rem;
+      color: var(--text-primary);
+    }
+    
+    .section-header a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    
+    .video-card {
+      background-color: var(--bg-secondary);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    
+    .video-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .thumbnail {
+      position: relative;
+      width: 100%;
+      height: 0;
+      padding-bottom: 56.25%;
+      overflow: hidden;
+    }
+    
+    .thumbnail img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .video-duration {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+    
+    .download-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--accent);
+      color: black;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .video-card:hover .download-icon {
+      opacity: 1;
+    }
+    
+    .video-info {
+      padding: 1rem;
+    }
+    
+    .video-info h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    
+    .video-meta {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+    
+    .trending-section {
+      background-color: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 10px;
+    }
+    
+    .featured-content {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    
+    .featured-thumbnail {
+      position: relative;
+      flex: 0 0 50%;
+    }
+    
+    .featured-thumbnail img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    
+    .featured-info {
+      flex: 1;
+    }
+    
+    .btn {
+      cursor: pointer;
+      padding: 0.7rem 1.5rem;
+      border-radius: 50px;
+      font-weight: bold;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent);
+      color: black;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    footer {
+      margin-top: 2rem;
+      background-color: var(--bg-secondary);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--text-secondary);
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .footer-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    
+    /* Animation pour le bouton de téléchargement */
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    .download-icon:hover {
+      animation: pulse 1s infinite;
+    }
+    
+    /* Classes pour les effets JS */
+    .video-card.highlight {
+      box-shadow: 0 0 15px var(--accent);
+    }
+    
+    /* Overlay pour menu mobile */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 150;
+      display: none;
+    }
+    
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100vh;
+      background-color: var(--bg-secondary);
+      z-index: 200;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      padding: 2rem 1rem;
+    }
+    
+    .mobile-sidebar.active {
+      left: 0;
+    }
+    
+    .close-menu {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    .mobile-nav {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .mobile-nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.8rem;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .mobile-nav a:hover {
+      background-color: rgba(187, 134, 252, 0.1);
+      color: var(--accent);
+    }
+    
+    /* Media queries */
+    @media (max-width: 1024px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .featured-content {
+        flex-direction: column;
+      }
+      
+      .featured-thumbnail {
+        flex: 0 0 100%;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      header {
+        padding: 0.8rem;
+      }
+      
+      .logo {
+        font-size: 1.2rem;
+      }
+      
+      .logo i {
+        font-size: 1.5rem;
+      }
+      
+      nav {
+        display: none;
+      }
+      
+      .search-bar {
+        order: 3;
+        width: 100%;
+        max-width: none;
+        margin-top: 0.8rem;
+      }
+      
+      .action-buttons {
+        justify-content: center;
+      }
+      
+      .btn {
+        padding: 0.6rem 1.2rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .featured-info h2 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <i class="fas fa-play-circle"></i>
+      <span>KaderMovie</span>
+    </div>
+    
+    <button class="mobile-menu-btn" id="menuBtn" style=" width: 40px; height: 10px;">
+      
+    </button>
+    
+    <nav>
+      <a href="#"><i class="fas fa-home"></i> Accueil</a>
+      <a href="#"><i class="fas fa-fire"></i> Tendances</a>
+      <a href="#"><i class="fas fa-bookmark"></i> Bibliothèque</a>
+      <a href="#"><i class="fas fa-user-circle"></i> Profil</a>
+    </nav>
+    
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Rechercher un film...">
+    </div>
+  </header>
+  
+  <div class="overlay" id="overlay"></div>
+  
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <button class="close-menu" id="closeMenu"><i class="fas fa-times"></i></button>
+    
+    <div class="mobile-nav">
+      <a href="#"><i class="fas fa-home"></i> Accueil</a>
+      <a href="#"><i class="fas fa-fire"></i> Tendances</a>
+      <a href="#"><i class="fas fa-bookmark"></i> Bibliothèque</a>
+      <a href="#"><i class="fas fa-user-circle"></i> Profil</a>
+    </div>
+    
+    <h3 style="margin-top: 2rem; color: var(--accent);">Catégories</h3>
+    <ul style="list-style: none;">
+      <li><a href="#" class="active" style="display: flex; align-items: center; gap: 0.5rem; color: var(--accent); text-decoration: none; padding: 0.8rem; border-radius: 5px; background-color: rgba(187, 134, 252, 0.2);"><i class="fas fa-laptop-code"></i> Développement</a></li>
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-palette"></i> Design</a></li>
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-camera"></i> Photographie</a></li>
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-video"></i> Vidéo</a></li>
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-music"></i> Audio</a></li>
+    </ul>
+    
+    <h3 style="margin-top: 2rem; color: var(--accent);">Mes collections</h3>
+    <ul style="list-style: none;">
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-folder"></i> JavaScript Avancé</a></li>
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-folder"></i> UI/UX Design</a></li>
+      <li><a href="#" style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-secondary); text-decoration: none; padding: 0.8rem; border-radius: 5px;"><i class="fas fa-plus-circle"></i> Nouvelle collection</a></li>
+    </ul>
+  </div>
+  
+  <main>
+    
+    
+    
+    <div class="content">
+      
+      <h4 style="color: red; text-align: center; margin-top: 10px;">Vous ne pouvez ni rechercher ni choisir le type de film l'accès est entièrement limité </h4>
+      <section class="trending-section">
+        <div class="section-header">
+          <h2><i class="fas fa-trophy"></i> Film à la une</h2>
+        </div>
+        
+        <div class="featured-content">
+          <div class="featured-thumbnail">
+            <img src="poster.jpg" alt="Featured Tutorial">
+            <div class="video-duration">02:02:59</div>
+            <div class="download-icon" data-download-link="https://mega.nz/file/bNMTVRjA#gJL9NH6g3-Kfzv2lXMA9_VcAMW7Kq9YD18jJb6IKC9U"><i class="fas fa-download"></i></div>
+          </div>
+          
+          <div class="featured-info">
+            <a id="url" href="https://mega.nz/file/bNMTVRjA#gJL9NH6g3-Kfzv2lXMA9_VcAMW7Kq9YD18jJb6IKC9U"></a>
+            <div class="jk" style="display: flex; align-items: center; justify-content: space-between;">
+               <h2 style="color: var(--accent); margin-bottom: 0.5rem;">À nous quatre</h2>
+              <h4>553 Mb</h4>
+            </div>
+           
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Deux jumelles séparées à la naissance se retrouvent par hasard dans un camp de vacances. Elles décident d’échanger leurs places pour réunir leurs parents divorcés. Mais leur plan est menacé par la future belle-mère de l'une d'elles.</p>
+            <div class="action-buttons" style="width: 100%;">
+             
+              <button class="btn btn-outline download-btn" style="width: 100%;" data-download-link="https://mega.nz/file/bNMTVRjA#gJL9NH6g3-Kfzv2lXMA9_VcAMW7Kq9YD18jJb6IKC9U">
+                <i class="fas fa-download"></i> Télécharger
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <section>
+        <div class="section-header">
+          <h2><i class="fas fa-fire"></i> Suggestion (reférence à la une)</h2>
+          <a href="#">Sélectionnez <i class="fas fa-chevron-right"></i></a>
+        </div>
+        
+        <div class="video-grid">
+          <div class="video-card">
+            <div class="thumbnail">
+              <img src="loved.jpg" alt="Thumbnail">
+              <div class="video-duration">01:40:25</div>
+              <div class="download-icon" ><i class="fas fa-download"></i></div>
+            </div>
+            <div class="video-info">
+              <h3>Love & Death (2024)</h3>
+              <div class="video-meta">
+                <span>Ce film dramatique suit l'histoire d'amour interdite entre deux personnes qui va aboutir à des événements tragiques.</span>
+                <span>800 Mb</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="video-card">
+            <div class="thumbnail">
+              <img src="lon.jpeg" alt="Thumbnail">
+              <div class="video-duration">02:45:07</div>
+              <div class="download-icon"><i class="fas fa-download"></i></div>
+            </div>
+            <div class="video-info">
+              <h3>Your Place or Mine (2024)</h3>
+              <div class="video-meta">
+                <span>Une romance mettant en vedette Reese Witherspoon et Ashton Kutcher, qui racontent l'histoire de deux amis qui échangent leurs maisons et leurs vies.</span>
+                <span>450 Mb</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="video-card">
+            <div class="thumbnail">
+              <img src="ka.jpg" alt="Thumbnail">
+              <div class="video-duration">01:17:06</div>
+              <div class="download-icon"><i class="fas fa-download"></i></div>
+            </div>
+            <div class="video-info">
+              <h3>The Last Thing He Told Me (2024)</h3>
+              <div class="video-meta">
+                <span>Ce film suit une femme qui découvre des secrets sur son mari après sa disparition, et son voyage émotionnel pour comprendre la vérité tout en faisant face à une grande souffrance personnelle.</span>
+                <span>500 Mb</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="video-card">
+            <div class="thumbnail">
+              <img src="im.jpg" alt="Thumbnail">
+              <div class="video-duration">01:05:58</div>
+              <div class="download-icon"><i class="fas fa-download"></i></div>
+            </div>
+            <div class="video-info">
+              <h3>I Am Love (2024)</h3>
+              <div class="video-meta">
+                <span>Un film qui raconte une histoire d’amour intense, presque obsessionnelle, entre une femme mariée et un jeune homme. La relation les conduit à des conflits internes profonds et à des choix dévastateurs.</span>
+                <span>600 Mb</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      
+    </div>
+  </main>
+  
+  <footer>
+    <div class="footer-links">
+      <a href="#">À propos</a>
+      <a href="#">Conditions d'utilisation</a>
+      <a href="#">Confidentialité</a>
+      <a href="#">Aide</a>
+      <a href="#">Contact</a>
+    </div>
+    <p>© 2025 KaderMovie - Tous droits réservés</p>
+  </footer>
+  
+  <script src="kader.js"></script>
+
+</body>
